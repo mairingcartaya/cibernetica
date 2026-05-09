@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sección 3 – Elección Condicionada</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      font-family: 'Roboto', sans-serif;
+      overflow: hidden;
+    }
+
+    .contenedor {
+      position: relative;
+      width: 80%;
+      max-width: 900px;
+      min-height: 500px;
+      margin: 50px auto;
+      background: rgba(240,240,240,0.1);
+      backdrop-filter: blur(4px);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      /* cambiamos aquí a Roboto */
+      font-family: 'Roboto', sans-serif;
+      overflow: hidden;
+    }
+
+    #texto {
+      width: 100%;
+      font-size: 16px;
+      line-height: 1.6;
+      letter-spacing: 0.5px;
+      text-align: left;
+      margin-bottom: 30px;
+    }
+
+    .modo-claro {
+      background: rgba(240,240,240,0.1);
+      color: #fff;
+      backdrop-filter: blur(4px);
+    }
+
+    .modo-oscuro {
+      background: rgba(255,0,0,0.8);
+      color: #ff0033;
+      font-family: 'Roboto', sans-serif;
+      font-size: 14px;
+      letter-spacing: -0.8px;
+      line-height: 0.9;
+      text-shadow:
+        0 0 2px #ff0000,
+        0 0 6px #ff0044,
+        0 0 10px #ff0033;
+      animation: parpadeo 0.08s infinite alternate;
+    }
+    @keyframes parpadeo {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to   { opacity: 0.4; transform: translateY(1px) scale(1.01); }
+    }
+
+    .toggle-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .toggle-switch {
+      width: 60px;
+      height: 30px;
+      background-color: #444;
+      border-radius: 30px;
+      position: relative;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .toggle-circle {
+      width: 26px;
+      height: 26px;
+      background-color: #DC0000;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: left 0.3s ease, background-color 0.3s ease;
+    }
+    .modo-claro .toggle-circle {
+      left: 32px;
+      background-color: #111;
+    }
+
+    .nav-button {
+      position: fixed;
+      bottom: 20px;
+      padding: 8px 12px;
+      font-family: 'Roboto Mono', monospace;  /* monospace en nav */
+      font-size: 14px;
+      color: rgb(136,136,136);
+      background: transparent;
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    .nav-button.prev { left: 20px; }
+    .nav-button.next { right: 20px; }
+    .nav-button:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor modo-claro" id="contenedor">
+    <div id="texto">
+      La interfaz actúa como una herramienta activa que cumple la función de mediar, al facilitar la comunicación humano-máquina, y al mismo tiempo carece de transparencia, pues moldea el comportamiento y percepción del usuario, al controlar y dirigir la interacción, definiendo su naturaleza. Esta no neutralidad está cargada de ideologías y visiones del mundo que habilitan ciertas acciones mientras restringen otras, y sumergen al usuario en un proceso de interpretación y co-diseño de la interfaz.
+    </div>
+    <div class="toggle-wrapper">
+      <div class="toggle-switch" onclick="alternarModo()">
+        <div class="toggle-circle" id="toggleCircle"></div>
+      </div>
+    </div>
+  </div>
+
+  <a href="seccion2.html" class="nav-button prev">&lt; anterior</a>
+  <a href="seccion4.html" class="nav-button next">siguiente &gt;</a>
+
+  <script>
+    const contenedor = document.getElementById('contenedor');
+    function alternarModo() {
+      contenedor.classList.toggle('modo-claro');
+      contenedor.classList.toggle('modo-oscuro');
+    }
+  </script>
+</body>
+</html>

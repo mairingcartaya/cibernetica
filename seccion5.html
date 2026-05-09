@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Sección 5 – Co-creación dinámica</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* Reset y body igual que secciones 1–4 */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      background: #000;
+      font-family: 'Roboto', sans-serif;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* Contenedor unificado */
+    .section5 {
+      position: relative;
+      width: 80%;
+      max-width: 900px;
+      height: 500px;
+      margin: 50px auto;
+      background: rgba(240, 240, 240, 0.1);
+      backdrop-filter: blur(4px);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* Texto oculto solo para medir */
+    #finalText {
+      position: absolute;
+      top: 50%;
+      left: 20px;
+      transform: translateY(-50%);
+      width: calc(100% - 40px);
+      font-size: 18px;
+      line-height: 1.6;
+      text-align: left;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    #finalText span {
+      display: inline-block;
+      white-space: pre;
+    }
+
+    /* Capa de fragmentos */
+    #contenedor {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+    }
+    .fragmento {
+      position: absolute;
+      font-size: 18px;
+      color: #fff;
+      transition: left 1s ease, top 1s ease;
+      animation: flotar 4s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    @keyframes flotar {
+      to { transform: translateY(-8px); }
+    }
+
+    /* Indicador click y nav as per secciones previas */
+    #clickLabel {
+      position: absolute;
+      bottom: 12px;
+      right: 20px;
+      font-size: 14px;
+      color: #C1121F;
+      font-family: 'Roboto Mono', monospace;
+      opacity: 0.8;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+    }
+
+    .nav-button {
+      position: fixed;
+      bottom: 20px;
+      padding: 8px 12px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+      color: rgb(136,136,136);
+      background: transparent;
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .nav-button.prev { left: 20px; }
+    .nav-button.next { right: 20px; }
+    .nav-button:hover { color: #fff; }
+  </style>
+</head>
+
+<body>
+  <div class="section5" id="section5">
+
+    <!-- Este div está oculto y solo sirve para medir posiciones -->
+    <div id="finalText">
+      <span>Remitiendo </span><span>a </span><span>una </span><span>idea </span>
+      <span>de </span><span>Martin </span><span>Heidegger, </span><span>es </span>
+      <span>posible </span><span>intuir </span><span>que </span><span>este </span>
+      <span>acto </span><span>de </span><span>mediación </span><span>transforma </span>
+      <span>la </span><span>interacción </span><span>en </span><span>un </span>
+      <span>proceso </span><span>co-creativo, </span><span>donde </span><span>la </span>
+      <span>interfaz </span><span>funciona </span><span>como </span><span>un </span>
+      <span>puente </span><span>al </span><span>crear </span><span>contexto </span>
+      <span>que </span><span>conecta </span><span>sistemas </span><span>(humano </span>
+      <span>y </span><span>máquina) </span><span>y </span><span>brinda </span>
+      <span>un </span><span>espacio </span><span>donde </span><span>los </span>
+      <span>elementos </span><span>intervienen </span><span>no </span><span>tienen </span>
+      <span>un </span><span>significado </span><span>predefinido, </span><span>sino </span>
+      <span>que </span><span>se </span><span>crean </span><span>y </span><span>toman </span>
+      <span>sentido </span><span>en </span><span>base </span><span>a </span><span>su </span>
+      <span>relación </span><span>con </span><span>el </span><span>otro, </span>
+      <span>definiendo </span><span>así </span><span>roles, </span><span>funciones </span>
+      <span>y </span><span>dinámicas.</span>
+    </div>
+
+    <!-- Aquí viven los fragmentos -->
+    <div id="contenedor"></div>
+    <div id="clickLabel">click</div>
+  </div>
+
+  <a href="seccion4.html" class="nav-button prev">&lt; anterior</a>
+  <a href="seccion6.html" class="nav-button next">siguiente &gt;</a>
+
+  <script>
+    const section5   = document.getElementById('section5');
+    const finalText  = document.getElementById('finalText');
+    const contenedor = document.getElementById('contenedor');
+    let assembled    = false;
+
+    // 1) Medir posiciones destino de cada palabra
+    const secRect = section5.getBoundingClientRect();
+    const spans   = Array.from(finalText.querySelectorAll('span'));
+    const targets = spans.map(sp => {
+      const r = sp.getBoundingClientRect();
+      return {
+        text: sp.textContent,
+        x: r.left - secRect.left,
+        y: r.top  - secRect.top
+      };
+    });
+
+    // 2) Crear fragmentos en posición aleatoria
+    function crearFragmentos() {
+      contenedor.innerHTML = '';
+      targets.forEach(t => {
+        const f = document.createElement('span');
+        f.className   = 'fragmento';
+        f.textContent = t.text;
+        f.style.left  = Math.random() * (section5.clientWidth - 100) + 'px';
+        f.style.top   = Math.random() * (section5.clientHeight - 40) + 'px';
+        contenedor.appendChild(f);
+      });
+    }
+
+    // 3) Ensamblar –> mover cada fragmento a su target
+    function ensamblar() {
+      Array.from(contenedor.children).forEach((f,i) => {
+        f.style.left = targets[i].x + 'px';
+        f.style.top  = targets[i].y + 'px';
+        f.style.animationPlayState = 'paused';
+      });
+    }
+
+    // 4) Dispersar –> reactivar animación y reposicionar al azar
+    function dispersar() {
+      Array.from(contenedor.children).forEach(f => {
+        f.style.animationPlayState = '';
+        f.style.left  = Math.random() * (section5.clientWidth - 100) + 'px';
+        f.style.top   = Math.random() * (section5.clientHeight - 40) + 'px';
+      });
+    }
+
+    // 5) Toggle al click
+    section5.addEventListener('click', () => {
+      assembled ? dispersar() : ensamblar();
+      assembled = !assembled;
+    });
+
+    crearFragmentos();
+  </script>
+</body>
+</html>

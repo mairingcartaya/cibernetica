@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mairing Cartaya – Intro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      font-family: 'Roboto', sans-serif;
+      overflow: hidden;
+    }
+
+    .intro {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding-left: 18%;
+      z-index: 9999;
+      transition: opacity 1s ease;
+    }
+
+    .intro h1 {
+      font-size: 72px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      opacity: 1;
+    }
+
+    .intro p {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 18px;
+      color: #C1121F;
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+
+    .loading {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 16px;
+      color: #888;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Pantalla de introducción -->
+  <div class="intro" id="intro">
+    <h1>Mairing Cartaya</h1>
+    <p>Solemne 2 – Fundamentos y teoría de la interacción<br>Docente: Felipe Weason</p>
+    <div class="loading" id="loading">[0%]</div>
+  </div>
+
+  <script>
+    const intro = document.getElementById('intro');
+    const loading = document.getElementById('loading');
+
+    let percent = 0;
+    const interval = setInterval(() => {
+      percent++;
+      loading.textContent = `[${percent}%]`;
+      if (percent >= 100) {
+        clearInterval(interval);
+        intro.style.opacity = 0;
+        setTimeout(() => {
+          window.location.href = "seccion1.html";
+        }, 1000);
+      }
+    }, 60); // velocidad de carga
+  </script>
+
+</body>
+</html>

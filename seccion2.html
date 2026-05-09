@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sección 2 – Evolución de la Interfaz</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+
+    html, body {
+      height: 100%;
+      background: #000;
+      font-family: 'Roboto', sans-serif;
+      overflow: hidden;
+      cursor: default;
+      color: #fff;
+    }
+
+    .contenedor {
+      position: relative;
+      width: 80%;
+      max-width: 900px;
+      min-height: 500px;
+      margin: 50px auto;
+      background: rgba(240,240,240,0.1);
+      backdrop-filter: blur(4px);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: none;
+      padding: 24px;
+      text-align: center;
+      font-family: 'Roboto Mono', monospace;
+    }
+    .contenedor.activo {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #mensajeInicio {
+      font-size: 14px;
+      color: #C1121F;
+    }
+
+    #instruccion {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #C1121F;
+      user-select: none;
+    }
+    #instruccion #clickA {
+      cursor: default;
+    }
+
+    /* SOLO estos textos usan Roboto */
+    #textoGlitch,
+    #textoFinal {
+      width: 100%;
+      min-height: 200px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      letter-spacing: 0.5px;
+      white-space: pre-wrap;
+      margin: 20px 0;
+      user-select: none;
+    }
+
+    .bug {
+      letter-spacing: 2px;
+      line-height: 2;
+    }
+    .rojo {
+      color: #C1121F !important;
+    }
+    .colapso {
+      background: #000;
+      color: #000;
+      cursor: progress !important;
+    }
+
+    .nav-button {
+      position: fixed;
+      bottom: 20px;
+      padding: 8px 12px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+      color: rgb(136,136,136);
+      background: transparent;
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    .nav-button.prev { left: 20px }
+    .nav-button.next { right: 20px }
+    .nav-button:hover { color: #fff }
+  </style>
+</head>
+<body>
+
+  <!-- Fase 1: comenzar -->
+  <div class="contenedor activo" id="contInicio">
+    <div id="mensajeInicio">presionar</div>
+  </div>
+
+  <!-- Fase 2: glitch + instrucción -->
+  <div class="contenedor" id="contGlitch">
+    <div id="textoGlitch"></div>
+    <div id="instruccion">
+      presiona <span id="clickA">a</span>
+    </div>
+  </div>
+
+  <!-- Fase 3: texto limpio -->
+  <div class="contenedor" id="contTexto">
+    <div id="textoFinal"></div>
+  </div>
+
+  <!-- Navegación -->
+  <a href="seccion1.html" class="nav-button prev">&lt; anterior</a>
+  <a href="seccion3.html" class="nav-button next">siguiente &gt;</a>
+
+  <script>
+    const contInicio  = document.getElementById('contInicio');
+    const contGlitch  = document.getElementById('contGlitch');
+    const contTexto   = document.getElementById('contTexto');
+    const textoGlitch = document.getElementById('textoGlitch');
+    const clickA      = document.getElementById('clickA');
+    const textoFinal  = document.getElementById('textoFinal');
+
+    const originalText = `La interfaz se encuentra en constante evolución, redefiniendo nuestra percepción de la realidad, pues es un actor activo que moldea la interacción y nuestro comportamiento mediante retroalimentación clara y efectiva, que permita conectar el ciclo de acción del usuario con las respuestas del sistema, reduciendo la función cognitiva y aumentando la usabilidad, con la ayuda de restricciones, topografía, visibilidad, asequibilidad y modelos conceptuales.`;
+
+    let fase = 0, animando = false, intervalo = null, transicionEnCurso = false;
+
+    document.addEventListener('keydown', e => {
+      if ((e.key==='ñ'||e.key==='Ñ') && fase===0) {
+        fase = 1;
+        contInicio.classList.remove('activo');
+        contGlitch.classList.add('activo');
+        textoGlitch.innerHTML = glitchTexto(originalText);
+        textoGlitch.classList.add('bug');
+      } else if ((e.key==='ñ'||e.key==='Ñ') && fase===2) {
+        corromperPagina();
+      }
+    });
+
+    clickA.addEventListener('click', () => {
+      if (fase!==1 || transicionEnCurso) return;
+      transicionEnCurso = true;
+      setTimeout(() => {
+        fase = 2;
+        contGlitch.classList.remove('activo');
+        contTexto.classList.add('activo');
+        textoFinal.textContent = '';
+        animando = true;
+        mostrarProgresivo(originalText, () => {
+          animando = false;
+          transicionEnCurso = false;
+        }, 600);
+      }, 1000);
+    });
+
+    textoFinal.addEventListener('click', () => {
+      if (fase===2) textoFinal.classList.toggle('rojo');
+    });
+
+    function mostrarProgresivo(texto, cb, velocidad=200) {
+      const palabras = texto.trim().split(/\s+/);
+      if (!palabras.length) {
+        if (cb) cb();
+        return;
+      }
+      let i = 0;
+      // limpiar cualquier intervalo previo
+      if (intervalo) {
+        clearInterval(intervalo);
+        intervalo = null;
+      }
+      const id = setInterval(() => {
+        const palabra = palabras[i] || '';
+        textoFinal.textContent += palabra + (palabra ? ' ' : '');
+        i += 1;
+        if (i >= palabras.length) {
+          clearInterval(id);
+          if (intervalo === id) intervalo = null;
+          if (cb) cb();
+        }
+      }, velocidad);
+      intervalo = id;
+    }
+
+    function glitchTexto(texto) {
+      // dividimos el texto por cualquier espacio y saltos de línea
+      const palabras = texto.trim().split(/\s+/);
+      const reemplazos = { a:'4', e:'3', i:'1', o:'0', u:'ü',
+                           A:'4', E:'3', I:'1', O:'0', U:'Ü',
+                           s:'$', S:'$' };
+      const extras = ['$', '%', '&', '#', '∿', '⊗', '∆', '≈', '§'];
+
+      return palabras.map(p => {
+        // 15% de ocultar palabra
+        if (Math.random() < 0.15) {
+          return `<span class="oculta">${p}</span>`;
+        }
+        // sustituir vocales y s
+        let mod = '';
+        for (const c of p) {
+          mod += reemplazos[c] || c;
+        }
+        // 30% de extra glitch
+        if (Math.random() < 0.3) {
+          mod += extras[Math.floor(Math.random()*extras.length)];
+        }
+        return mod;
+      }).join(' ');
+    }
+
+    function corromperPagina() {
+      document.body.style.background = '#000';
+      document.body.innerHTML = '';
+      setTimeout(() => {
+        const msg = document.createElement('div');
+        msg.textContent = 'ERROR FATAL: Sección dañada.';
+        Object.assign(msg.style, {
+          position: 'absolute',
+          top: '50%', left: '50%',
+          transform: 'translate(-50%,-50%)',
+          color: '#C1121F',
+          fontFamily: 'Roboto Mono, monospace',
+          fontSize: '18px',
+          textAlign: 'center',
+          padding: '12px'
+        });
+        msg.addEventListener('click', () => window.location.href='index.html');
+        document.body.appendChild(msg);
+      }, 300);
+    }
+  </script>
+</body>
+</html>

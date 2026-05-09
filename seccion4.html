@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sección 4 – Tríptico Metafórico</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%;
+      background: #000;
+      font-family: 'Roboto', sans-serif;
+      overflow: hidden;
+    }
+    .contenedor {
+      position: relative;
+      width: 80%;
+      max-width: 900px;
+      height: 500px;
+      margin: 50px auto;
+      background: rgba(240, 240, 240, 0.1);
+      backdrop-filter: blur(4px);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .slider {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+    }
+    .slider::-webkit-scrollbar {
+      display: none;
+    }
+    .slide {
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      width: 100%;
+      height: 100%;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      text-align: left;
+    }
+
+    .contenedor-membrana,
+    #espacioTexto {
+      max-width: 700px;
+      font-size: 16px;
+      line-height: 1.6;
+      filter: url(#liquido);
+    }
+
+    /* Solo el textarea del slide “Instrumento” */
+    #instrumento textarea {
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: 1px dashed rgba(255,255,255,0.5);
+      resize: none;
+      color: #fff;
+      font-size: 16px;
+      padding: 8px;
+      line-height: 1.6;
+    }
+
+    #espacioCanvas {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      cursor: grab;
+      overflow: hidden;
+    }
+    #espacioTexto {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 700px;
+      height: 1600px;
+      padding: 40px;
+      color: #fff;
+      box-sizing: border-box;
+    }
+
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 2;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #444;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .dot.active {
+      background: hsla(0,100%,43%,0.8);
+    }
+
+    .nav-button {
+      position: fixed;
+      bottom: 20px;
+      padding: 8px 12px;
+      font-family: 'Roboto Mono', monospace; /* ahora monospace */
+      font-size: 14px;
+      color: rgb(136,136,136);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      z-index: 10;
+    }
+    .nav-button.prev { left: 20px; }
+    .nav-button.next { right: 20px; }
+    .nav-button:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor">
+    <div class="slider" id="slider">
+
+      <!-- Slide 0: Membrana (Roboto) -->
+      <div class="slide" id="membrana">
+        <div class="contenedor-membrana" id="textoMembrana">
+          La interfaz es inherentemente metafórica, siendo comprendida a través de analogías como “membrana”, “instrumento” o “espacio”, de forma que cada una ilumina diferentes aspectos que influyen en su diseño, uso y simulación. Además, la interfaz es un elemento con capacidad transformadora, que evoluciona a través de su sistema interconectado, y reconfigura las dinámicas de poder, comunicación y cultura del ser humano.
+        </div>
+      </div>
+
+      <!-- Slide 1: Instrumento (monospace) -->
+      <div class="slide" id="instrumento">
+        <textarea>
+La interfaz es inherentemente metafórica, siendo comprendida a través de analogías como “membrana”, “instrumento” o “espacio”, de forma que cada una ilumina diferentes aspectos que influyen en su diseño, uso y simulación. Además, la interfaz es un elemento con capacidad transformadora, que evoluciona a través de su sistema interconectado, y reconfigura las dinámicas de poder, comunicación y cultura del ser humano.
+        </textarea>
+      </div>
+
+      <!-- Slide 2: Espacio (Roboto) -->
+      <div class="slide" id="espacio">
+        <div id="espacioCanvas">
+          <div id="espacioTexto">
+            La interfaz es inherentemente metafórica, siendo comprendida a través de analogías como “membrana”, “instrumento” o “espacio”, de forma que cada una ilumina diferentes aspectos que influyen en su diseño, uso y simulación. Además, la interfaz es un elemento con capacidad transformadora, que evoluciona a través de su sistema interconectado, y reconfigura las dinámicas de poder, comunicación y cultura del ser humano.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="controls">
+      <div class="dot active" onclick="goToSlide(0)"></div>
+      <div class="dot" onclick="goToSlide(1)"></div>
+      <div class="dot" onclick="goToSlide(2)"></div>
+    </div>
+  </div>
+
+  <a href="seccion3.html" class="nav-button prev">&lt; anterior</a>
+  <a href="seccion5.html" class="nav-button next">siguiente &gt;</a>
+
+  <svg style="display:none">
+    <filter id="liquido">
+      <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="turb"/>
+      <feDisplacementMap in="SourceGraphic" in2="turb" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
+  <script>
+    const slider = document.getElementById('slider');
+    const dots   = document.querySelectorAll('.dot');
+    function goToSlide(i) {
+      slider.scrollTo({ left: i * slider.clientWidth, behavior: 'smooth' });
+      dots.forEach(d => d.classList.remove('active'));
+      dots[i].classList.add('active');
+    }
+
+    // Membrana líquida
+    const textoMembrana = document.getElementById('textoMembrana');
+    const turb = document.querySelector('#liquido feTurbulence');
+    const displ = document.querySelector('#liquido feDisplacementMap');
+    let t = 0, scale = 0, over = false;
+    function animar() {
+      t += 0.01;
+      turb.setAttribute('baseFrequency', (0.008 + Math.sin(t)*0.002).toFixed(4));
+      const target = over ? 8 : 0;
+      scale += (target - scale) * 0.05;
+      displ.setAttribute('scale', scale.toFixed(2));
+      requestAnimationFrame(animar);
+    }
+    textoMembrana.addEventListener('mouseenter', () => over = true);
+    textoMembrana.addEventListener('mouseleave', () => over = false);
+    animar();
+
+    // Arrastrar espacio
+    const espacioCanvas = document.getElementById('espacioCanvas');
+    const espacioTexto  = document.getElementById('espacioTexto');
+    let drag = false, sx, sy, ox = 0, oy = 0;
+    espacioCanvas.addEventListener('mousedown', e => {
+      drag = true;
+      espacioCanvas.style.cursor = 'grabbing';
+      sx = e.clientX - ox;
+      sy = e.clientY - oy;
+    });
+    window.addEventListener('mouseup', () => {
+      drag = false;
+      espacioCanvas.style.cursor = 'grab';
+    });
+    window.addEventListener('mousemove', e => {
+      if (!drag) return;
+      ox = e.clientX - sx;
+      oy = e.clientY - sy;
+      espacioTexto.style.transform = `translate(${ox}px, ${oy}px)`;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sección 1 – Lugar de la Interacción</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Mono&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      background: #000;
+      font-family: 'Roboto', sans-serif;
+      overflow: hidden;
+    }
+
+    .contenedor {
+      position: relative;
+      width: 80%; max-width: 900px; height: 500px;
+      margin: 50px auto;
+      background: rgba(240, 240, 240, 0.1);
+      backdrop-filter: blur(4px);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    #LEER {
+      position: absolute;
+      top:50%; left:50%;
+      transform: translate(-50%,-50%);
+      width:70%;
+      font-family: 'Roboto Mono', monospace;
+      color: #C1121F;
+      font-size: 14px;
+      opacity: 0.06;
+      text-align: center;
+      line-height: 1.5;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+    }
+
+    #zoomLabel {
+      position: absolute;
+      bottom:12px; right:20px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+      color: #C1121F;
+      opacity: 0.8;
+      pointer-events: none;
+      user-select: none;
+      z-index: 2;
+    }
+
+    /* El canvas irá dentro del .contenedor, pero con z-index -1 */
+    canvas {
+      position: absolute;
+      top: 0; left: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .nav-button {
+      position: fixed;
+      bottom: 20px; right: 20px;
+      padding: 8px 12px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 14px;
+      color: rgb(136,136,136);
+      background: transparent;
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    .nav-button:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="contenedor">
+    <div id="LEER">
+      El lugar de la interfaz es el punto de interacción humano-máquina,<br>
+      el espacio mediador que los conecta a través del diálogo dinámico<br>
+      y construcción de significado en base a su relación.<br><br>
+      Este lugar es el escenario multidimensional,<br>
+      donde convergen la subjetividad del usuario,<br>
+      el diseño de la máquina,<br>
+      y la interpretación de las acciones del primero,<br>
+      y la retroalimentación del segundo.
+    </div>
+    <div id="zoomLabel">scroll</div>
+  </div>
+
+  <a href="seccion2.html" class="nav-button">
+    siguiente <span>&gt;</span>
+  </a>
+
+  <!-- p5.js -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <script>
+    let zoom = 0.4, zoomTarget = 0.4, cnv;
+
+    function setup() {
+      const cont = document.querySelector('.contenedor');
+      // el canvas cubre exactamente el contenedor
+      cnv = createCanvas(cont.clientWidth, cont.clientHeight);
+      cnv.parent(cont);
+      cnv.style('position','absolute');
+      cnv.style('top','0');
+      cnv.style('left','0');
+      cnv.style('z-index','-1');  // detrás del contenido
+      textAlign(CENTER, CENTER);
+      textFont('Roboto');
+      textStyle(BOLD);
+    }
+
+    function draw() {
+      clear();                  // limpia sin pintar fondo
+      fill(255);
+      zoom += (zoomTarget - zoom) * 0.1;
+      push();
+        translate(width/2, height/2);
+        scale(zoom);
+        textSize(48);
+        text("¿Cuál es el lugar de la interacción?", 0, 0);
+      pop();
+    }
+
+    function mouseWheel(e) {
+      zoomTarget = constrain(zoomTarget + e.delta * -0.0015, 0.2, 10);
+    }
+
+    function doubleClicked() {
+      zoomTarget = 0.4;
+    }
+
+    function windowResized() {
+      const cont = document.querySelector('.contenedor');
+      resizeCanvas(cont.clientWidth, cont.clientHeight);
+    }
+  </script>
+
+</body>
+</html>
